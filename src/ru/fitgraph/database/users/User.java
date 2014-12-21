@@ -1,13 +1,24 @@
 package ru.fitgraph.database.users;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.*;
 import java.util.List;
 
 /**
  * Created by melges on 15.12.14.
  */
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "users", indexes = {
+})
+@NamedQueries({
+        @NamedQuery(name = "User.getUserByName", query = "select user from User user where user.username = :username"),
+        @NamedQuery(name = "User.getUserByVkId", query = "select user from User user where user.vkUserId = :vkId"),
+        @NamedQuery(name = "User.getUserByEmail", query = "select user from User user where user.email = :email"),
+        @NamedQuery(name = "User.getUserBySessionSecret", query = "select session.owner from User user, UserSession session " +
+                "where session.sessionSecret = :sessionSecret")
 })
 public class User {
     @Id
@@ -15,6 +26,7 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
+    @XmlElement
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
@@ -24,6 +36,7 @@ public class User {
     @Column(name = "access_token")
     private String accessToken;
 
+    @XmlElement
     @Column(name = "user_email", unique = true, nullable = false)
     private String email;
 
@@ -36,5 +49,10 @@ public class User {
 
     public User(String username) {
         this.username = username;
+    }
+
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
     }
 }
