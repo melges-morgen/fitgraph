@@ -17,8 +17,14 @@ import java.util.List;
         @NamedQuery(name = "User.getUserByName", query = "select user from User user where user.username = :username"),
         @NamedQuery(name = "User.getUserByVkId", query = "select user from User user where user.vkUserId = :vkId"),
         @NamedQuery(name = "User.getUserByEmail", query = "select user from User user where user.email = :email"),
-        @NamedQuery(name = "User.getUserBySessionSecret", query = "select session.owner from User user, UserSession session " +
-                "where session.sessionSecret = :sessionSecret")
+        @NamedQuery(name = "User.getUserBySessionSecret", query = "select session.owner " +
+                "from User user, UserSession session " +
+                "where session.sessionSecret = :sessionSecret " +
+                "and session.expiresIn > CURRENT_TIMESTAMP"),
+        @NamedQuery(name = "User.getUserByVkIdAndSessionSecret", query = "select user " +
+                "from User user, UserSession sessions where " +
+                "user.vkUserId = :vkId and sessions.sessionSecret = :secret and sessions.owner = user " +
+                "and sessions.expiresIn > CURRENT_TIMESTAMP")
 })
 public class User {
     @Id

@@ -6,6 +6,7 @@ import ru.fitgraph.engine.vkapi.VkAuth;
 import ru.fitgraph.engine.vkapi.elements.VkAccessResponse;
 import ru.fitgraph.engine.vkapi.exceptions.VkSideError;
 
+import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,6 +25,7 @@ import java.net.URISyntaxException;
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class ProfileResource {
     @GET
+    @PermitAll
     @Path("/auth")
     public VkAccessResponse auth(
             @NotEmpty @QueryParam("code") String code,

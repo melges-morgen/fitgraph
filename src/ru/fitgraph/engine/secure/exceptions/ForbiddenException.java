@@ -1,4 +1,4 @@
-package ru.fitgraph.engine.secure;
+package ru.fitgraph.engine.secure.exceptions;
 
 import javax.ws.rs.WebApplicationException;
 

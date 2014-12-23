@@ -1,6 +1,6 @@
 package ru.fitgraph.rest.exceptions;
 
-import ru.fitgraph.engine.secure.NotAuthorizedException;
+import ru.fitgraph.engine.secure.exceptions.NotAuthorizedException;
 import ru.fitgraph.rest.elements.ErrorResponse;
 
 import javax.ws.rs.core.Response;
