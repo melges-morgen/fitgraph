@@ -9,12 +9,15 @@ import ru.fitgraph.engine.vkapi.exceptions.VkSideError;
  * Created by melges on 22.12.14.
  */
 public class AuthController {
+
     public static boolean isSessionCorrect(Long vkId, String sessionSecret) {
         return UserController.getUserByVkAndSession(vkId, sessionSecret) != null;
     }
 
-    public static void auth(String code, String redirectUrl) throws VkSideError {
+    public static Long auth(String code, String redirectUrl) throws VkSideError {
         VkAccessResponse response = VkAuth.auth(code, redirectUrl);
+        //User
 
+        return 0L;
     }
 }

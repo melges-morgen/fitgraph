@@ -1,5 +1,6 @@
 package ru.fitgraph.engine.secure;
 
+import org.apache.log4j.Logger;
 import ru.fitgraph.engine.secure.exceptions.ForbiddenException;
 import ru.fitgraph.engine.secure.exceptions.NotAuthorizedException;
 
@@ -22,6 +23,8 @@ import java.util.Map;
  */
 @Provider
 public class AuthFilter implements ContainerRequestFilter {
+    private final static Logger logger = Logger.getLogger(AuthFilter.class);
+
     @Context
     private ResourceInfo resourceInfo;
 

@@ -26,5 +26,13 @@ public class UserSession {
     @Column(name = "expires_in", nullable = false)
     private Date expiresIn;
 
-    private Long vkUserId;
+    UserSession() {
+        sessionSecret = null;
+        expiresIn = null;
+    }
+
+    public UserSession(String sessionSecret, Long expiresIn) {
+        this.sessionSecret = sessionSecret;
+        this.expiresIn = new Date(System.currentTimeMillis() + expiresIn);
+    }
 }

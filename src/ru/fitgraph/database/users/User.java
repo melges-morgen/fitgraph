@@ -55,10 +55,20 @@ public class User {
 
     public User(String username) {
         this.username = username;
+        sessions = null;
     }
 
     public User(String username, String email) {
         this.username = username;
         this.email = email;
+        sessions = null;
+    }
+
+    public User(String username, String email, Long vkUserId, String sessionSecret, Long expiresIn) {
+        this.username = username;
+        this.email = email;
+        this.vkUserId = vkUserId;
+        UserSession firstSession = new UserSession(sessionSecret, expiresIn);
+        this.sessions.add(firstSession);
     }
 }
