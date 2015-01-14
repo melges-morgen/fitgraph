@@ -2,6 +2,7 @@ package ru.fitgraph.database.users;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +25,8 @@ import java.util.List;
         @NamedQuery(name = "User.getUserByVkIdAndSessionSecret", query = "select user " +
                 "from User user, UserSession sessions where " +
                 "user.vkUserId = :vkId and sessions.sessionSecret = :secret and sessions.owner = user " +
-                "and sessions.expiresIn > CURRENT_TIMESTAMP")
+                "and sessions.expiresIn > CURRENT_TIMESTAMP"),
+        @NamedQuery(name = "User.getUserByVkId", query = "select user from User user where user.vkUserId = :vkId")
 })
 public class User {
     @Id
@@ -46,29 +48,40 @@ public class User {
     @Column(name = "user_email", unique = true, nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<UserSession> sessions;
 
     public User() {
-        sessions = null;
+        sessions = new ArrayList<UserSession>();
     }
 
     public User(String username) {
         this.username = username;
-        sessions = null;
+        sessions = new ArrayList<UserSession>();
     }
 
     public User(String username, String email) {
         this.username = username;
         this.email = email;
-        sessions = null;
+        sessions = new ArrayList<UserSession>();
     }
 
-    public User(String username, String email, Long vkUserId, String sessionSecret, Long expiresIn) {
+    public User(String username, String email, Long vkUserId, String sessionSecret, String accessToken,
+                Long expiresIn) {
         this.username = username;
         this.email = email;
         this.vkUserId = vkUserId;
-        UserSession firstSession = new UserSession(sessionSecret, expiresIn);
+        this.accessToken = accessToken;
+        this.sessions = new ArrayList<UserSession>();
+
+        UserSession firstSession = new UserSession(this, sessionSecret, expiresIn);
+        this.sessions.add(firstSession);
+    }
+
+    public void addSession(String sessionSecret, String accessToken, Long expiresIn) {
+        this.accessToken = accessToken;
+
+        UserSession firstSession = new UserSession(this, sessionSecret, expiresIn);
         this.sessions.add(firstSession);
     }
 }
