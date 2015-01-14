@@ -2,20 +2,17 @@ package ru.fitgraph.rest.resources;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import ru.fitgraph.database.users.User;
-import ru.fitgraph.engine.vkapi.VkAuth;
-import ru.fitgraph.engine.vkapi.elements.VkAccessResponse;
+import ru.fitgraph.engine.secure.AuthController;
 import ru.fitgraph.engine.vkapi.exceptions.VkSideError;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
@@ -27,11 +24,15 @@ public class ProfileResource {
     @GET
     @PermitAll
     @Path("/auth")
-    public VkAccessResponse auth(
+    public Response auth(
             @NotEmpty @QueryParam("code") String code,
-            @Context HttpServletRequest request) throws MalformedURLException, VkSideError, URISyntaxException {
-        URI uri = new URI(request.getRequestURI());
-        return VkAuth.auth(code, String.format("%s://%s%s", uri.getScheme(), uri.getAuthority(), uri.getPath()));
+            @Context HttpServletRequest request,
+            @CookieParam(value = "JSESSIONID") String sessionId) throws MalformedURLException, VkSideError, URISyntaxException {
+        String uri = request.getRequestURL().toString();
+
+        return Response.ok()
+                .cookie(new NewCookie("vkId", AuthController.auth(code, uri, sessionId).toString()))
+                .build();
     }
 
     @GET

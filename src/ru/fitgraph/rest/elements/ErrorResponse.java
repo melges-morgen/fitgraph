@@ -14,6 +14,11 @@ public class ErrorResponse {
     @XmlElement
     public String errorDescription;
 
+    public ErrorResponse() {
+        error = "None";
+        errorDescription = "Not provided";
+    }
+
     public ErrorResponse(String error, String errorDescription) {
         this.error = error;
         this.errorDescription = errorDescription;

@@ -17,6 +17,9 @@ public class VkAccessResponse {
     @XmlElement(name = "expires_in")
     private long expiresIn;
 
+    @XmlElement(name = "email", required = false)
+    private String email;
+
     public VkAccessResponse() {
     }
 
@@ -36,5 +39,9 @@ public class VkAccessResponse {
 
     public long getExpiresIn() {
         return expiresIn;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
