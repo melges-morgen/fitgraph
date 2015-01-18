@@ -43,14 +43,18 @@ public class AuthFilter implements ContainerRequestFilter {
         Cookie vkIdCookie = cookieMap.get("vkId");
         if(vkIdCookie == null)
             throw new NotAuthorizedException("No vkId in cookie.");
-        Long vkId =Long.getLong(vkIdCookie.getValue());
-        if(vkId == null)
-            throw new NotAuthorizedException("No vkId in cookie.");
+        Long vkId;
+        try {
+            vkId = Long.parseLong(vkIdCookie.getValue());
+        }
+        catch (NumberFormatException exception) {
+            throw new NotAuthorizedException("Invalid vkId in cookie");
+        }
+
         Cookie sessionCookie = cookieMap.get("JSESSIONID");
         if(sessionCookie == null)
-            throw new NotAuthorizedException("No vkId in cookie.");
+            throw new NotAuthorizedException("No session in cookie.");
         String sessionSecret = sessionCookie.getValue();
-
 
         if(resourceMethod.isAnnotationPresent(RolesAllowed.class)) {
             RolesAllowed rolesAllowed = resourceMethod.getAnnotation(RolesAllowed.class);
@@ -61,8 +65,8 @@ public class AuthFilter implements ContainerRequestFilter {
             return;
         }
 
-        if(AuthController.isSessionCorrect(vkId, sessionSecret))
-            throw new NotAuthorizedException("Session id incorrect");
+        if(!AuthController.isSessionCorrect(vkId, sessionSecret))
+            throw new NotAuthorizedException("Session incorrect or expired");
 
     }
 }

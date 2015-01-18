@@ -1,21 +1,19 @@
 package ru.fitgraph.engine.vkapi.elements;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import ru.fitgraph.database.users.User;
+import ru.fitgraph.engine.vkapi.marshals.VkDateDeserializer;
+
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 
 /**
  * Created by melges on 13.01.15.
  */
 @XmlRootElement
 public class VkUserInfo {
-    @XmlType(name = "sex")
-    @XmlEnum
-    public enum Sex {
-        @XmlEnumValue("0") Undefined,
-        @XmlEnumValue("1") Female,
-        @XmlEnumValue("2") Male,
-    }
-
     @NotNull
     @XmlElement(name = "id", required = true)
     private Long id;
@@ -30,10 +28,11 @@ public class VkUserInfo {
 
     @NotNull
     @XmlElement(name = "sex")
-    private Sex sex;
+    private User.Sex sex;
 
     @XmlElement(name = "bdate")
-    private String birthDate;
+    @JsonDeserialize(using = VkDateDeserializer.class)
+    private Date birthDate;
 
     @NotNull
     @XmlElement(name = "photo_max", required = true)
@@ -51,11 +50,11 @@ public class VkUserInfo {
         return lastName;
     }
 
-    public Sex getSex() {
+    public User.Sex getSex() {
         return sex;
     }
 
-    public String getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
@@ -64,6 +63,6 @@ public class VkUserInfo {
     }
 
     public String getFullName() {
-        return lastName + firstName;
+        return String.format("%s %s", lastName, firstName);
     }
 }

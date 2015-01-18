@@ -47,11 +47,44 @@ public class UserController {
         }
     }
 
-    public static void persist(User user) {
+    public UserSession getSessionBySecret(String secret) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<UserSession> findSessionQuery =
+                    em.createNamedQuery("UserSession.findBySessionSecret", UserSession.class);
+            findSessionQuery.setParameter("secret", secret);
+            List<UserSession> resultList = findSessionQuery.getResultList();
+            if (resultList.size() == 1)
+                return resultList.get(0);
+            if (resultList.size() == 0)
+                return null;
+
+            throw new NonUniqueResultException("We are try to get user by vkId, but get more than 1 result. " +
+                    "This can occur when the database is incorrectly configured");
+        } finally {
+            em.close();
+        }
+    }
+
+    public static void save(User user) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
             em.persist(user);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    public static void saveOrUpdate(User user) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            if(user.getUserId() == null)
+                em.persist(user);
+            else
+                em.merge(user);
             em.getTransaction().commit();
         } finally {
             em.close();

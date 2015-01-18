@@ -9,6 +9,8 @@ import java.util.Date;
 @Entity
 @Table(name = "users_sessions", indexes = {
 })
+@NamedQueries({@NamedQuery(name = "UserSession.findBySessionSecret", query = "select session from UserSession session " +
+        "where session.sessionSecret = :secret")})
 public class UserSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +18,7 @@ public class UserSession {
     private Long sessionId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = false, updatable = false)
     private User owner;
 
     @Column(name = "session_secret", nullable = false, unique = true, updatable = false)
@@ -34,6 +36,28 @@ public class UserSession {
     public UserSession(User owner, String sessionSecret, Long expiresIn) {
         this.owner = owner;
         this.sessionSecret = sessionSecret;
+        this.expiresIn = new Date(System.currentTimeMillis() + expiresIn);
+    }
+
+    public Long getSessionId() {
+        return sessionId;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public String getSessionSecret() {
+        return sessionSecret;
+    }
+
+    public Date getExpiresIn() {
+        return expiresIn;
+    }
+
+    public void setExpiresIn(Long expiresIn) {
+        if(expiresIn <= 0)
+            expiresIn = 2629743L * 1000L;
         this.expiresIn = new Date(System.currentTimeMillis() + expiresIn);
     }
 }

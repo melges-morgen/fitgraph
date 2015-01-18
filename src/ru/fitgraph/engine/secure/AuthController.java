@@ -22,13 +22,15 @@ public class AuthController {
         User user = UserController.getUserByVkId(response.getUserId());
         if(user == null) {
             VkUserInfo vkUserInfo = VkUsers.get(response.getUserId(), response.getAccessToken());
-            user = new User(vkUserInfo.getFullName(), response.getEmail(), response.getUserId(), sessionSecret,
+            user = new User(vkUserInfo.getFullName(), response.getEmail(), vkUserInfo.getSex(),
+                    vkUserInfo.getBirthDate(),
+                    response.getUserId(), sessionSecret,
                     response.getAccessToken(), response.getExpiresIn());
         } else {
             user.addSession(sessionSecret, response.getAccessToken(), response.getExpiresIn());
         }
 
-        UserController.persist(user);
+        UserController.saveOrUpdate(user);
 
         return response.getUserId();
     }

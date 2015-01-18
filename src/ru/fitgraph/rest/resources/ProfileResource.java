@@ -2,16 +2,15 @@ package ru.fitgraph.rest.resources;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import ru.fitgraph.database.users.User;
+import ru.fitgraph.database.users.UserController;
 import ru.fitgraph.engine.secure.AuthController;
+import ru.fitgraph.engine.vkapi.VkAuth;
 import ru.fitgraph.engine.vkapi.exceptions.VkSideError;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
@@ -21,23 +20,39 @@ import java.net.URISyntaxException;
 @Path("/profile")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class ProfileResource {
+    @CookieParam(value = "JSESSIONID")
+    private String sessionId;
+
+    @CookieParam(value = "vkId")
+    private Long vkId;
+
+    @GET
+    @PermitAll
+    @Path("/getvkrequesturi")
+    public String getVkRequestUri(@Context UriInfo uriInfo) {
+        String uri = VkAuth.getClientAuthUri(uriInfo.getBaseUriBuilder()
+                .path(ProfileResource.class)
+                .path(ProfileResource.class, "auth").build());
+        return uri;
+    }
+
     @GET
     @PermitAll
     @Path("/auth")
     public Response auth(
             @NotEmpty @QueryParam("code") String code,
-            @Context HttpServletRequest request,
-            @CookieParam(value = "JSESSIONID") String sessionId) throws MalformedURLException, VkSideError, URISyntaxException {
+            @Context HttpServletRequest request) throws MalformedURLException, VkSideError, URISyntaxException {
         String uri = request.getRequestURL().toString();
 
+        NewCookie vkIdCookie = new NewCookie("vkId", AuthController.auth(code, uri, sessionId).toString(), "/", null,
+                null, 2629744, false); // Valid for a month
         return Response.ok()
-                .cookie(new NewCookie("vkId", AuthController.auth(code, uri, sessionId).toString()))
+                .cookie(vkIdCookie)
                 .build();
     }
 
     @GET
-    public User getProfile(@Context HttpServletRequest request) {
-        return new User("Melges");
+    public User getProfile() {
+        return UserController.getUserByVkAndSession(vkId, sessionId);
     }
-
 }

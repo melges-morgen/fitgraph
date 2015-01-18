@@ -37,8 +37,12 @@ public class VkAccessResponse {
         return userId;
     }
 
+    /**
+     * Time that access token is valid in milliseconds
+     * @return time in milliseconds
+     */
     public long getExpiresIn() {
-        return expiresIn;
+        return expiresIn * 1000;
     }
 
     public String getEmail() {
