@@ -35,7 +35,6 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
-        <finalName>ROOT</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -43,6 +42,8 @@
                 <version>2.5</version>
                 <configuration>
                     <webappDirectory>web</webappDirectory>
+                    <outputDirectory>deployments</outputDirectory>
+                    <warName>ROOT</warName>
                 </configuration>
             </plugin>
             <plugin>
