@@ -1,4 +1,4 @@
-package ru.fitgraph.database;
+package ru.fitgraph.database.weight;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ru.fitgraph.database.marshals.WeightDateJsonSerializer;
@@ -18,6 +18,13 @@ import java.util.Date;
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
 @Table(name = "weight_points")
+@NamedQueries({
+        @NamedQuery(name = "WeightPoint.getUserPointBetween", query = "select point from WeightPoint point " +
+            "where point.owner = :owner and point.date > :startDate and point.date < :endDate"),
+        @NamedQuery(name = "WeightPoint.getVkUserPointBetween", query = "select point " +
+                "from WeightPoint point, User user " +
+                "where point.owner.vkUserId = :ownerVkId and point.date > :startDate and point.date < :endDate")
+})
 public class WeightPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,6 +64,10 @@ public class WeightPoint {
         this.weight = weight;
         this.owner = owner;
         this.date = date;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Date getDate() {

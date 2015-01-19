@@ -1,13 +1,13 @@
 package ru.fitgraph.rest.resources;
 
-import ru.fitgraph.database.WeightPoint;
+import ru.fitgraph.database.weight.WeightPoint;
 import ru.fitgraph.database.users.User;
 import ru.fitgraph.database.users.UserController;
+import ru.fitgraph.database.weight.WeightPointController;
+import ru.fitgraph.rest.elements.DateParameter;
 
-import javax.ws.rs.CookieParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,8 @@ public class WeightResource {
 
     @GET
     @Path("/getpoints")
-    public List<WeightPoint> getPoints() {
-        return null;
+    public List<WeightPoint> getPoints(@NotNull @QueryParam("startDate") DateParameter startDate,
+                                       @NotNull @QueryParam("endDate") DateParameter endDate) {
+        return WeightPointController.getVkUserWeightPointsBetween(vkId, startDate.getDate(), endDate.getDate());
     }
 }

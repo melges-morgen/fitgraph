@@ -1,7 +1,7 @@
 package ru.fitgraph.database.users;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import ru.fitgraph.database.WeightPoint;
+import ru.fitgraph.database.weight.WeightPoint;
 import ru.fitgraph.database.marshals.BirthDateJsonSerializer;
 
 import javax.persistence.*;

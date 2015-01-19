@@ -30,10 +30,9 @@ public class ProfileResource {
     @PermitAll
     @Path("/getvkrequesturi")
     public String getVkRequestUri(@Context UriInfo uriInfo) {
-        String uri = VkAuth.getClientAuthUri(uriInfo.getBaseUriBuilder()
-                .path(ProfileResource.class)
+        return VkAuth.getClientAuthUri(uriInfo.getBaseUriBuilder()
+                .path(ProfileResource.class) // Add class path
                 .path(ProfileResource.class, "auth").build());
-        return uri;
     }
 
     @GET
