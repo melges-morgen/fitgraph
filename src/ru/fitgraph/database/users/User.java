@@ -75,7 +75,7 @@ public class User {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @MapKeyColumn(name = "p_id", insertable = false, updatable = false)
-    Map<Long, WeightPoint> weightPoint = new HashMap<Long, WeightPoint>();
+    List<WeightPoint> weightPoint = new ArrayList<WeightPoint>();
 
     public User() {
     }
@@ -119,6 +119,11 @@ public class User {
         }
     }
 
+    public void addWeightPoint(Date date, Double weight) {
+        WeightPoint newWeightPoint = new WeightPoint(date, weight, this);
+        weightPoint.add(newWeightPoint);
+    }
+
     public Long getUserId() {
         return userId;
     }
@@ -151,7 +156,7 @@ public class User {
         return birthDate;
     }
 
-    public Map<Long, WeightPoint> getWeightPoint() {
+    public List<WeightPoint> getWeightPoints() {
         return weightPoint;
     }
 }
