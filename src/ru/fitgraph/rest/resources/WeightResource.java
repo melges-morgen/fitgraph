@@ -14,8 +14,11 @@ import java.util.List;
 
 /**
  * Resource which is used for access and work with weight.
- * For all weight methods date must be in format dd.MM.yyyy-hh:MM:ss
- * @author Melges
+ * For all weight methods date must be in format dd.MM.yyyy-hh:MM:ss {@link java.text.SimpleDateFormat}
+ *
+ * If client must be authorized for calling method but it is not, unauthorized response code will be
+ * returned to client, and body will contain error object with description.
+ * @author Morgen Matvey
  */
 @Path("/weight")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
