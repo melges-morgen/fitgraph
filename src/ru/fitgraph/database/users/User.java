@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.*;
 import java.util.*;
 
 /**
- * Entity class for store users.
+ * Entity class for storing users.
  *
  * @author Morgen Matvey
  */
@@ -107,18 +107,42 @@ public class User {
     @MapKeyColumn(name = "p_id", insertable = false, updatable = false)
     List<WeightPoint> weightPoint = new ArrayList<WeightPoint>();
 
+    /**
+     * Default constructor
+     */
     public User() {
     }
 
+    /**
+     * Create user with specified username
+     * @param username users full name.
+     */
     public User(String username) {
         this.username = username;
     }
 
+    /**
+     * Create user with specified username and email.
+     * @param username users full name.
+     * @param email users email.
+     */
     public User(String username, String email) {
         this.username = username;
         this.email = email;
     }
 
+    /**
+     * Create user with full profile, and add first session for him. This constructor should be used
+     * when we user register himself.
+     * @param username users full name.
+     * @param email users email.
+     * @param sex users sex.
+     * @param birthDate users date of birth.
+     * @param vkUserId user id in vk service.
+     * @param sessionSecret session id which user provide.
+     * @param accessToken access token returned from vk service.
+     * @param expiresIn time of vk sessions life in milliseconds.
+     */
     public User(String username, String email, Sex sex, Date birthDate,
                 Long vkUserId, String sessionSecret, String accessToken, Long expiresIn) {
         this.username = username;
@@ -133,7 +157,7 @@ public class User {
     }
 
     /**
-     * Save new user session opened for user.
+     * Save new user session opened for user. Allow auth user with provided data.
      * @param sessionSecret session id or other secret string used for identity user.
      * @param accessToken access token received from vk.
      * @param expiresIn time that the session is valid in milliseconds.
@@ -149,6 +173,11 @@ public class User {
         }
     }
 
+    /**
+     * Create new weight point and associate it with user.
+     * @param date date when weight was seen.
+     * @param weight weight in kilograms.
+     */
     public void addWeightPoint(Date date, Double weight) {
         WeightPoint newWeightPoint = new WeightPoint(date, weight, this);
         weightPoint.add(newWeightPoint);

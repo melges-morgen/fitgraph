@@ -4,12 +4,24 @@ import javax.persistence.*;
 import java.util.List;
 
 /**
- * Created by melges on 16.12.14.
+ * Class for work with user objects.
  */
 public class UserController {
+    /**
+     * Entity manager factory associated with our data source
+     */
     private static EntityManagerFactory emf =
             Persistence.createEntityManagerFactory("FitGraphDataSource");
 
+    /**
+     * Find user with specified vk id and session id. Useful for auth methods.
+     * @param vkId vk id which user should have.
+     * @param sessionSecret client session id (sessionSecret) which user should have.
+     * @return user with specified data or null.
+     *
+     * @throws javax.persistence.NonUniqueResultException in case when we find more than one users with specified
+     * criteria.
+     */
     public static User getUserByVkAndSession(Long vkId, String sessionSecret) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -29,6 +41,14 @@ public class UserController {
         }
     }
 
+    /**
+     * Find user with specified vk id. Useful for auth methods.
+     * @param vkId vk id which user should have.
+     * @return user with specified data or null.
+     *
+     * @throws javax.persistence.NonUniqueResultException in case when we find more than one users with specified
+     * criteria.
+     */
     public static User getUserByVkId(Long vkId) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -47,6 +67,14 @@ public class UserController {
         }
     }
 
+    /**
+     * Return user session with specified session secret.
+     * @param secret sessionSecret which found session must have.
+     * @return session with specified secret or null.
+     *
+     * @throws javax.persistence.NonUniqueResultException in case when we find more than one users with specified
+     * criteria.
+     */
     public UserSession getSessionBySecret(String secret) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -66,6 +94,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Save user to database and save all linked objects if needed. If user with specified data alredy exist throw
+     * error.
+     * @param user user which must be saved.
+     */
     public static void save(User user) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -77,6 +110,10 @@ public class UserController {
         }
     }
 
+    /**
+     * Similar to save method, but if user exist update them.
+     * @param user user which must be saved or merged.
+     */
     public static void saveOrUpdate(User user) {
         EntityManager em = emf.createEntityManager();
         try {
