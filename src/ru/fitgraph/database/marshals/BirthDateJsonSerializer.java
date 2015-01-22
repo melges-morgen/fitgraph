@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by melges on 16.01.15.
+ * Class for serialize birth date from database to json in specified format.
  */
 public class BirthDateJsonSerializer extends JsonSerializer<Date> {
     private static final SimpleDateFormat birthDateFormat = new SimpleDateFormat("dd.MM.yyyy");

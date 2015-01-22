@@ -9,9 +9,10 @@ import javax.xml.bind.annotation.*;
 import java.util.*;
 
 /**
- * Created by melges on 15.12.14.
+ * Entity class for store users.
+ *
+ * @author Morgen Matvey
  */
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
@@ -32,6 +33,9 @@ import java.util.*;
         @NamedQuery(name = "User.getUserByVkId", query = "select user from User user where user.vkUserId = :vkId")
 })
 public class User {
+    /**
+     * Enum type which represent available state of sex field.
+     */
     @XmlType(name = "sex")
     @XmlEnum
     public enum Sex {
@@ -40,35 +44,61 @@ public class User {
         @XmlEnumValue("2") Male,
     }
 
+    /**
+     * Unique id field
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId = null;
 
+    /**
+     * Full name of user
+     */
     @XmlElement
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
+    /**
+     * Users vk id of
+     */
     @Column(name = "vk_user_id", unique = true, nullable = false)
     private Long vkUserId;
 
+    /**
+     * Vk access token, associated with user
+     */
     @Column(name = "access_token")
     private String accessToken;
 
+    /**
+     * Users email
+     */
     @XmlElement
     @Column(name = "user_email", unique = true, nullable = false)
     private String email;
 
+    /**
+     * Is user male, female or other?
+     */
     @XmlElement
     @Column(name = "sex")
     private Sex sex;
 
+    /**
+     * Birth date, stored day, month and year always midnight in servers time zone as unix timestamp.
+     * Serialized to json as dd.MM.yyyy {@link java.util.SimpleTimeZone}
+     */
     @XmlElement
     @JsonSerialize(using = BirthDateJsonSerializer.class)
     @Column(name = "birth_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date birthDate;
 
+    /**
+     * Virtual field, list which contain all success auth sessions opened by user.
+     * Field is virtual, link to user is made by column in {@link ru.fitgraph.database.users.UserSession} class.
+     */
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @MapKeyColumn(name = "session_secret", insertable = false, updatable = false)
     private Map<String, UserSession> sessions = new HashMap<String, UserSession>();

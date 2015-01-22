@@ -10,14 +10,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by melges on 17.01.15.
+ * Class for serialize weights date from database to json in specified format.
  */
 public class WeightDateJsonSerializer extends JsonSerializer<Date> {
-    private static final SimpleDateFormat birthDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+    private static final SimpleDateFormat weightDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     @Override
     public void serialize(Date date, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
             throws IOException, JsonProcessingException {
-        jsonGenerator.writeString(birthDateFormat.format(date));
+        jsonGenerator.writeString(weightDateFormat.format(date));
     }
 }
