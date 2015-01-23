@@ -9,14 +9,30 @@ import ru.fitgraph.engine.vkapi.elements.VkUserInfo;
 import ru.fitgraph.engine.vkapi.exceptions.VkSideError;
 
 /**
- * Created by melges on 22.12.14.
+ * Class contain methods for work with user authentication.
  */
 public class AuthController {
 
+    /**
+     * Method check data provided by client for correctness and session validity.
+     * @param vkId vkId of user, provided by client.
+     * @param sessionSecret session id provided by client (session secret).
+     * @return true if clint give correct data, or false if client is liar or his session expired.
+     */
     public static boolean isSessionCorrect(Long vkId, String sessionSecret) {
         return UserController.getUserByVkAndSession(vkId, sessionSecret) != null;
     }
 
+    /**
+     * Method authorize client by provided data using vk oauth protocol. If user client authenticate at first time,
+     * new user will be created. In other cases we find who is authenticate and create new session.
+     *
+     * @param code code provided by client (client must request it from vk first).
+     * @param redirectUrl redirect uri which client provide to vk client and which client call for invoke auth.
+     * @param sessionSecret client session secret.
+     * @return vk id returned from
+     * @throws VkSideError if vk say about error, or we have a trouble when connecting to vk.
+     */
     public static Long auth(String code, String redirectUrl, String sessionSecret) throws VkSideError {
         VkAccessResponse response = VkAuth.auth(code, redirectUrl);
         User user = UserController.getUserByVkId(response.getUserId());

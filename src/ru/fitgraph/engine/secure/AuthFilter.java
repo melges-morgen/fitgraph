@@ -2,7 +2,7 @@ package ru.fitgraph.engine.secure;
 
 import org.apache.log4j.Logger;
 import ru.fitgraph.engine.secure.exceptions.ForbiddenException;
-import ru.fitgraph.engine.secure.exceptions.NotAuthorizedException;
+import ru.fitgraph.engine.secure.exceptions.NotAuthenticatedException;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -19,18 +19,34 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * Created by melges on 18.12.14.
+ * Filter class, jersey invoke filter method of this class before invoke any
+ * resource methods.
+ *
+ * Class must check is the client which is try to call resource method has a right for that.
  */
 @Provider
 public class AuthFilter implements ContainerRequestFilter {
+    /**
+     * Class logger.
+     */
     private final static Logger logger = Logger.getLogger(AuthFilter.class);
 
+    /**
+     * Field is used for get information from context about invoked web resource.
+     */
     @Context
     private ResourceInfo resourceInfo;
 
+    /**
+     * Check is client has right to invoke requested method. If client haven't right invoke will be denied and
+     * exception will throw.
+     * @param requestContext context for get information about client and requested method and other.
+     * @throws IOException
+     * @throws WebApplicationException
+     */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException, WebApplicationException {
-        // Get method which will be invoked by jersey if we don't
+        // Get method which will be invoked by jersey if we don't deny it
         Method resourceMethod = resourceInfo.getResourceMethod();
 
         if(resourceMethod.isAnnotationPresent(PermitAll.class))
@@ -42,18 +58,18 @@ public class AuthFilter implements ContainerRequestFilter {
         Map<String, Cookie> cookieMap = requestContext.getCookies();
         Cookie vkIdCookie = cookieMap.get("vkId");
         if(vkIdCookie == null)
-            throw new NotAuthorizedException("No vkId in cookie.");
+            throw new NotAuthenticatedException("No vkId in cookie.");
         Long vkId;
         try {
             vkId = Long.parseLong(vkIdCookie.getValue());
         }
         catch (NumberFormatException exception) {
-            throw new NotAuthorizedException("Invalid vkId in cookie");
+            throw new NotAuthenticatedException("Invalid vkId in cookie");
         }
 
         Cookie sessionCookie = cookieMap.get("JSESSIONID");
         if(sessionCookie == null)
-            throw new NotAuthorizedException("No session in cookie.");
+            throw new NotAuthenticatedException("No session in cookie.");
         String sessionSecret = sessionCookie.getValue();
 
         if(resourceMethod.isAnnotationPresent(RolesAllowed.class)) {
@@ -66,7 +82,7 @@ public class AuthFilter implements ContainerRequestFilter {
         }
 
         if(!AuthController.isSessionCorrect(vkId, sessionSecret))
-            throw new NotAuthorizedException("Session incorrect or expired");
+            throw new NotAuthenticatedException("Session incorrect or expired");
 
     }
 }

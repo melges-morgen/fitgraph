@@ -4,10 +4,17 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Created by melges on 16.12.14.
+ * Object represent format which vk use for response on access get method.
+ *
+ * See more in vk docs at http://vk.com/dev
+ *
+ * May be serialized in JSON or XML.
  */
 @XmlRootElement
 public class VkAccessResponse {
+    /**
+     * Returned by vk access token.
+     */
     @XmlElement(name = "access_token")
     private String accessToken;
 
