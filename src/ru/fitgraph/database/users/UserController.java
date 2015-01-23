@@ -95,7 +95,7 @@ public class UserController {
     }
 
     /**
-     * Save user to database and save all linked objects if needed. If user with specified data alredy exist throw
+     * Save user to database and save all linked objects if needed. If user with specified data already exist throw
      * error.
      * @param user user which must be saved.
      */

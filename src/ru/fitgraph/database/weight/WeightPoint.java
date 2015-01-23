@@ -12,7 +12,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 /**
- * Created by melges on 16.01.15.
+ * Class for store information about users weight.
+ * Information stored as points (time_moment, weight).
+ *
+ * @author Morgen Matvey
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
@@ -26,32 +29,52 @@ import java.util.Date;
                 "where point.owner.vkUserId = :ownerVkId and point.date > :startDate and point.date < :endDate")
 })
 public class WeightPoint {
+    /**
+     * Unique id of point.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "p_id")
     private Long id;
 
+    /**
+     * Date when weight was registered.
+     */
     @XmlElement
     @JsonSerialize(using = WeightDateJsonSerializer.class)
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
+    /**
+     * Registered weight.
+     */
     @XmlElement
     @Column(name = "weight")
     private Double weight;
 
+    /**
+     * The user whose weight is registered.
+     */
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, unique = false, updatable = false)
     User owner;
 
+    /**
+     * Create unfilled point without owner
+     */
     public WeightPoint() {
         this.id = null;
-        this.weight = 50.0;
+        this.weight = 0.0;
         this.owner = null;
         this.date = new Date();
     }
 
+    /**
+     * Create point, for weight registered right now.
+     * @param weight registered weight.
+     * @param owner user who register his weight.
+     */
     public WeightPoint(Double weight, User owner) {
         this.id = null;
         this.weight = weight;
@@ -59,6 +82,12 @@ public class WeightPoint {
         this.date = new Date();
     }
 
+    /**
+     * Create point for specified with specified weight at specified moment
+     * @param date moment when weight was registered.
+     * @param weight registered weight.
+     * @param owner user, who register weight.
+     */
     public WeightPoint(Date date, Double weight, User owner) {
         this.date = date;
         this.weight = weight;

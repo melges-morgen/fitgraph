@@ -18,6 +18,7 @@ import java.util.List;
  *
  * If client must be authorized for calling method but it is not, unauthorized response code will be
  * returned to client, and body will contain error object with description.
+ *
  * @author Morgen Matvey
  */
 @Path("/weight")

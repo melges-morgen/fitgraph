@@ -157,7 +157,21 @@ public class User {
     }
 
     /**
-     * Save new user session opened for user. Allow auth user with provided data.
+     * Add or update (if session with same session secret already exist) user session to list of users sessions as is.
+     * After using this method, user session owner field
+     * must be managed manually.
+     * @param session session object.
+     */
+    public void addSession(UserSession session) {
+        if(sessions.containsKey(session.getSessionSecret()))
+            sessions.get(session.getSessionSecret()).setExpiresIn(session.getExpiresIn());
+        else
+            sessions.put(session.getSessionSecret(), session);
+    }
+
+    /**
+     * Save new user session opened for user or update session if session with specified session secret already opened.
+     * Allow auth user with provided data.
      * @param sessionSecret session id or other secret string used for identity user.
      * @param accessToken access token received from vk.
      * @param expiresIn time that the session is valid in milliseconds.
