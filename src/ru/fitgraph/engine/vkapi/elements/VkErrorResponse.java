@@ -4,19 +4,39 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Created by melges on 17.12.14.
+ * Object represent error response from vk.
+ *
+ * Contain error code and description.
+ *
+ * May be serialized to JSON or XML.
+ *
+ * @author Morgen Matvey
  */
 @XmlRootElement
 public class VkErrorResponse {
+    /**
+     * Error code.
+     */
     @XmlElement(name = "error")
     private String error;
 
+    /**
+     * Error description.
+     */
     @XmlElement(name = "error_description")
     private String errorDescription;
 
+    /**
+     * Construct empty object.
+     */
     public VkErrorResponse() {
     }
 
+    /**
+     * Construct error with description.
+     * @param error error code.
+     * @param errorDescription error description.
+     */
     public VkErrorResponse(String error, String errorDescription) {
         this.error = error;
         this.errorDescription = errorDescription;
