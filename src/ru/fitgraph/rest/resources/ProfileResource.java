@@ -53,6 +53,7 @@ public class ProfileResource {
     @GET
     @PermitAll
     @Path("/getVkRequestUri")
+    @Produces(MediaType.TEXT_PLAIN)
     public String getVkRequestUri(@Context UriInfo uriInfo) {
         return VkAuth.getClientAuthUri(uriInfo.getBaseUriBuilder()
                 .path(ProfileResource.class) // Add class path
