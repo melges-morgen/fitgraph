@@ -10,33 +10,62 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 /**
- * Created by melges on 13.01.15.
+ * Class represent vk answer about one user (for example in users.get method).
+ *
+ * May be serialized to JSON or XML.
+ *
+ * @author Morgen Matvey
  */
 @XmlRootElement
 public class VkUserInfo {
+    /**
+     * User if (vkId)
+     */
     @NotNull
     @XmlElement(name = "id", required = true)
     private Long id;
 
+    /**
+     * First name in subjective case.
+     */
     @NotNull
     @XmlElement(name = "first_name")
     private String firstName;
 
+    /**
+     * Last name in subjective case.
+     */
     @NotNull
     @XmlElement(name = "last_name")
     private String lastName;
 
+    /**
+     * Users gender.
+     */
     @NotNull
     @XmlElement(name = "sex")
     private User.Sex sex;
 
+    /**
+     * Users birth date without time, in format dd.MM.yyyy. For parse this field used special
+     * deserializer {@link ru.fitgraph.engine.vkapi.marshals.VkDateDeserializer}
+     */
     @XmlElement(name = "bdate")
     @JsonDeserialize(using = VkDateDeserializer.class)
     private Date birthDate;
 
+    /**
+     * Url to users photo
+     */
     @NotNull
     @XmlElement(name = "photo_max", required = true)
     private String photoUri;
+
+    /**
+     * Default constructor
+     */
+    public VkUserInfo() {
+    }
 
     public Long getId() {
         return id;
@@ -62,6 +91,10 @@ public class VkUserInfo {
         return photoUri;
     }
 
+    /**
+     * Method create full user name from first and last name.
+     * @return full user name.
+     */
     public String getFullName() {
         return String.format("%s %s", lastName, firstName);
     }

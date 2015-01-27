@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by melges on 16.01.15.
+ * Class which is used for parsing birth date field in vk responses
  */
 public class VkDateDeserializer extends JsonDeserializer<Date> {
     private final static Logger logger = Logger.getLogger(VkDateDeserializer.class);
