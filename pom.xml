@@ -66,6 +66,7 @@
                     <webResources>
                         <resource>
                             <directory>face/app</directory>
+                            <targetPath>webapp</targetPath>
                         </resource>
                     </webResources>
                     <outputDirectory>deployments</outputDirectory>
