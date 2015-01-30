@@ -57,10 +57,13 @@ public class UserSession {
      * @param expiresIn time of live in milliseconds.
      */
     public UserSession(User owner, String sessionSecret, Long expiresIn) {
+        if(expiresIn <= 0)
+            expiresIn = 2629743L * 1000L;
+
         this.owner = owner;
-        owner.addSession(this);
         this.sessionSecret = sessionSecret;
-        this.expiresIn = new Date(System.currentTimeMillis() + expiresIn);
+        this.setExpiresIn(expiresIn);
+        owner.addSession(this);
     }
 
     public Long getSessionId() {

@@ -62,7 +62,8 @@ public class ProfileResource {
     }
 
     /**
-     * Auth user by code and set the client cookie.
+     * Auth user by code and set the client cookie. For comparability with browser application method return html page
+     * with javascript which should close the window.
      *
      * Yo should call {@link #getVkRequestUri(javax.ws.rs.core.UriInfo)}
      * for get the url which client must call, to get the code.
@@ -76,6 +77,7 @@ public class ProfileResource {
     @GET
     @PermitAll
     @Path("/auth")
+    @Produces(MediaType.TEXT_HTML)
     public Response auth(
             @NotEmpty @QueryParam("code") String code,
             @Context HttpServletRequest request) throws MalformedURLException, VkSideError, URISyntaxException {
@@ -84,38 +86,11 @@ public class ProfileResource {
         NewCookie vkIdCookie = new NewCookie("vkId", AuthController.auth(code, uri, sessionId).toString(), "/", null,
                 null, 2629744, false); // Valid for a month
         return Response.ok()
+                .entity("<script>window.close()</script>") // Add simple script for browser based application
                 .cookie(vkIdCookie)
                 .build();
     }
 
-    /**
-     * Auth user by code and set the client cookie. Same as the {@link #auth} but response contains script
-     * which should close the window.
-     *
-     * Yo should call {@link #getVkRequestUri(javax.ws.rs.core.UriInfo)}
-     * for get the url which client must call, to get the code.
-     * @param code code that vk returned to the client.
-     * @param request information about request, injected by context.
-     * @return response with new cookie, or error object with description.
-     * @throws MalformedURLException
-     * @throws VkSideError
-     * @throws URISyntaxException
-     */
-    @GET
-    @PermitAll
-    @Path("/auth")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response authBrowser(
-            @NotEmpty @QueryParam("code") String code,
-            @Context HttpServletRequest request) throws MalformedURLException, VkSideError, URISyntaxException {
-        String uri = request.getRequestURL().toString();
-
-        NewCookie vkIdCookie = new NewCookie("vkId", AuthController.auth(code, uri, sessionId).toString(), "/", null,
-                null, 2629744, false); // Valid for a month
-        return Response.ok()
-                .cookie(vkIdCookie)
-                .build();
-    }
 
     /**
      * Return user profile object. Only for authorized users.
