@@ -2,6 +2,7 @@ package ru.fitgraph.engine.vkapi;
 
 import org.apache.log4j.Logger;
 import ru.fitgraph.engine.vkapi.elements.VkAccessResponse;
+import ru.fitgraph.engine.vkapi.elements.VkAuthUri;
 import ru.fitgraph.engine.vkapi.exceptions.VkSideError;
 
 import java.net.URI;
@@ -20,10 +21,10 @@ public class VkAuth {
 
     private final static Logger logger = Logger.getLogger(VkAuth.class);
 
-    public static String getClientAuthUri(URI redirectUri) {
+    public static VkAuthUri getClientAuthUri(URI redirectUri) {
         String scope = "notify,email,offline";
-        return String.format("%s?client_id=%s&scope=%s&redirect_uri=%s&response_type=code&v=%s",
-                VK_CLIENT_ACCESS_URI, APP_ID, scope, redirectUri.toString(), VK_API_VERSION);
+        return new VkAuthUri(String.format("%s?client_id=%s&scope=%s&redirect_uri=%s&response_type=code&v=%s",
+                VK_CLIENT_ACCESS_URI, APP_ID, scope, redirectUri.toString(), VK_API_VERSION));
     }
 
     /**

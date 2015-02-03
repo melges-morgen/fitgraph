@@ -197,6 +197,15 @@ public class User {
         weightPoint.add(newWeightPoint);
     }
 
+    /**
+     * Associate weight point with user
+     * @param point point which should be associated.
+     */
+    public void addWeightPoint(WeightPoint point) {
+        point.setOwner(this);
+        weightPoint.add(point);
+    }
+
     public Long getUserId() {
         return userId;
     }

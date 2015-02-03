@@ -5,6 +5,7 @@ import ru.fitgraph.database.users.User;
 import ru.fitgraph.database.users.UserController;
 import ru.fitgraph.engine.secure.AuthController;
 import ru.fitgraph.engine.vkapi.VkAuth;
+import ru.fitgraph.engine.vkapi.elements.VkAuthUri;
 import ru.fitgraph.engine.vkapi.exceptions.VkSideError;
 
 import javax.annotation.security.PermitAll;
@@ -54,8 +55,7 @@ public class ProfileResource {
     @GET
     @PermitAll
     @Path("/getVkRequestUri")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getVkRequestUri(@Context UriInfo uriInfo) {
+    public VkAuthUri getVkRequestUri(@Context UriInfo uriInfo) {
         return VkAuth.getClientAuthUri(uriInfo.getBaseUriBuilder()
                 .path(ProfileResource.class) // Add class path
                 .path(ProfileResource.class, "auth").build());

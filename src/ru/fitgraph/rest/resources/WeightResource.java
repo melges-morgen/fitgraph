@@ -57,7 +57,7 @@ public class WeightResource {
      * @return users points by specified period.
      */
     @GET
-    @Path("/getPoints")
+    @Path("/points")
     public List<WeightPoint> getPoints(@NotNull @QueryParam("startDate") DateParameter startDate,
                                        @NotNull @QueryParam("endDate") DateParameter endDate) {
         return WeightPointController.getVkUserWeightPointsBetween(vkId, startDate.getDate(), endDate.getDate());
@@ -69,12 +69,25 @@ public class WeightResource {
      * @param weight weight of point.
      */
     @PUT
-    @Path("/addPoint")
+    @Path("/points")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public void addPoint(@NotNull @FormParam("date") DateParameter date,
+    public void addPointUrlEncoded(@NotNull @FormParam("date") DateParameter date,
                          @NotNull @FormParam("weight") Double weight) {
         User user = UserController.getUserByVkAndSession(vkId, sessionId);
         user.addWeightPoint(date.getDate(), weight);
+        UserController.saveOrUpdate(user);
+    }
+
+    /**
+     * Add new point or rewrite if point on the same date already exist.
+     * @param point json encoded weight point.
+     */
+    @PUT
+    @Path("/points")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void addPoint(WeightPoint point) {
+        User user = UserController.getUserByVkAndSession(vkId, sessionId);
+        user.addWeightPoint(point);
         UserController.saveOrUpdate(user);
     }
 }

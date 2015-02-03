@@ -1,10 +1,13 @@
 package ru.fitgraph.database.weight;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import ru.fitgraph.database.marshals.WeightDateJsonDeserializer;
 import ru.fitgraph.database.marshals.WeightDateJsonSerializer;
 import ru.fitgraph.database.users.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -40,8 +43,10 @@ public class WeightPoint {
     /**
      * Date when weight was registered.
      */
-    @XmlElement
+    @NotNull
+    @XmlElement(required = true)
     @JsonSerialize(using = WeightDateJsonSerializer.class)
+    @JsonDeserialize(using = WeightDateJsonDeserializer.class)
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
@@ -49,7 +54,8 @@ public class WeightPoint {
     /**
      * Registered weight.
      */
-    @XmlElement
+    @NotNull
+    @XmlElement(required = true)
     @Column(name = "weight")
     private Double weight;
 
@@ -95,6 +101,7 @@ public class WeightPoint {
         this.date = date;
     }
 
+
     public Long getId() {
         return id;
     }
@@ -109,5 +116,9 @@ public class WeightPoint {
 
     public User getOwner() {
         return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }
