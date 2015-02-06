@@ -137,12 +137,17 @@ fitGraphModule.controller('PointController', function ($scope, $filter,  pointsR
     function pointsReceived(data, status) {
         $scope.chartData.data = [];
 
+        $scope.points.sort(function(a, b) {
+            return (new Date(b.date) - new Date(a.date)) * -1;
+        });
+
         for(var ind = 0; ind < $scope.points.length; ind++) {
             $scope.chartData.data.push({
                 x: $filter('date')(Date.parse($scope.points[ind].date), $scope.graphDateFormat),
                 y: [$scope.points[ind].weight]
             });
         }
+
     }
 
     function periodChanged(newValue, oldValue) {
