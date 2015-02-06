@@ -1,0 +1,59 @@
+<div ng-controller="PointController" class="main-graph-layout">
+    <div class="graph-layout">
+        <div>
+            <div class="graph-controller">
+                <div class="date-picker">
+                    <p class="input-group date-picker">
+                        <span class="date-picker-label">По</span>
+                        <input type="text" class="form-control" datepicker-popup="{{datePickerFormat}}"
+                               ng-model="endDate"
+                               is-open="endDatePopup" datepicker-options="dateOptions"
+                               ng-required="true" close-text="Close"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="endDateOpen($event)"><i
+                        class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                    </p>
+                </div>
+                <div class="date-picker">
+                    <p class="input-group date-picker">
+                        <span class="date-picker-label">С</span>
+                        <input type="text" class="form-control" datepicker-popup="{{datePickerFormat}}"
+                               ng-model="startDate"
+                               is-open="startDatePopup" datepicker-options="dateOptions"
+                               ng-required="true" close-text="Close"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="startDateOpen($event)"><i
+                        class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="point-edit-form">
+            <h3>Зафиксировать мой вес</h3>
+            <form novalidate class="simple-form">
+                <div class="date-picker">
+                    <p class="input-group date-picker">
+                        <input type="text" class="form-control" datepicker-popup="{{datePickerFormat}}"
+                               ng-model="pointEditDate"
+                               is-open="startDatePopup" datepicker-options="dateOptions"
+                               ng-required="true" close-text="Close"/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="startDateOpen($event)"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <span style="">
+                    <timepicker ng-model="pointEditTime" show-meridian="false"></timepicker>
+                </span>
+                <label>Мой вес:</label>
+                <input type="text" ng-model="pointEditWeight" class="form-control"
+                       style="max-width: 60px;margin-bottom: 6px;">
+                <button class='btn btn-default' ng-click="savePoint()">Зафиксировать</button>
+            </form>
+        </div>
+        <div ac-chart="'line'" ac-data="chartData" ac-config="chartConfig" id='chart' class='weight-chart'></div>
+    </div>
+</div>
