@@ -10,7 +10,7 @@ import java.util.Date;
  * Created by melges on 19.01.15.
  */
 public class DateParameter {
-    private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd.MM.yyyy-HH:mm:ss");
+    private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     private Date date;
 
