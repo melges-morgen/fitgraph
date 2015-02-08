@@ -77,7 +77,6 @@ public class ProfileResource {
     @GET
     @PermitAll
     @Path("/auth")
-    @Produces(MediaType.TEXT_HTML)
     public Response auth(
             @NotEmpty @QueryParam("code") String code,
             @Context HttpServletRequest request) throws MalformedURLException, VkSideError, URISyntaxException {
@@ -86,7 +85,6 @@ public class ProfileResource {
         NewCookie vkIdCookie = new NewCookie("vkId", AuthController.auth(code, uri, sessionId).toString(), "/", null,
                 null, 2629744, false); // Valid for a month
         return Response.ok()
-                .entity("<script>window.close()</script>") // Add simple script for browser based application
                 .cookie(vkIdCookie)
                 .build();
     }

@@ -25,7 +25,6 @@ public class ThrowableExceptionMapper implements ExceptionMapper<Throwable> {
                 new ErrorResponse("InternalServerErrorException", "Internal problem on server, try later.");
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR)
-                .type(MediaType.APPLICATION_JSON)
                 .entity(response).build();
     }
 }
