@@ -2,6 +2,7 @@ package ru.fitgraph.rest.exceptions;
 import org.apache.log4j.Logger;
 import ru.fitgraph.rest.elements.ErrorResponse;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -13,15 +14,18 @@ import javax.ws.rs.ext.Provider;
  * @author Morgen Matvey
  */
 @Provider
-public class InternalExceptionMapper implements ExceptionMapper<Throwable> {
+public class ThrowableExceptionMapper implements ExceptionMapper<Throwable> {
 
-    private final static Logger logger = Logger.getLogger(InternalExceptionMapper.class);
+    private final static Logger logger = Logger.getLogger(ThrowableExceptionMapper.class);
 
     @Override
     public Response toResponse(Throwable exception) {
         logger.error("There are unresolved exception!", exception);
         ErrorResponse response =
                 new ErrorResponse("InternalServerErrorException", "Internal problem on server, try later.");
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(response).build();
+        return Response
+                .status(Response.Status.INTERNAL_SERVER_ERROR)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(response).build();
     }
 }
