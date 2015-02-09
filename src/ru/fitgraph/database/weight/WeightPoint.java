@@ -23,13 +23,15 @@ import java.util.Date;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Entity
-@Table(name = "weight_points")
+@Table(name = "weight_points",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "date"}, name = "datePerUser"))
 @NamedQueries({
         @NamedQuery(name = "WeightPoint.getUserPointBetween", query = "select point from WeightPoint point " +
             "where point.owner = :owner and point.date > :startDate and point.date < :endDate"),
         @NamedQuery(name = "WeightPoint.getVkUserPointBetween", query = "select point " +
-                "from WeightPoint point, User user " +
-                "where point.owner.vkUserId = :ownerVkId and point.date > :startDate and point.date < :endDate")
+                "from WeightPoint point " +
+                "where point.owner = (select user from User user where user.vkUserId = :ownerVkId) " +
+                "and point.date > :startDate and point.date < :endDate")
 })
 public class WeightPoint {
     /**
