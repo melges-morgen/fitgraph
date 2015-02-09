@@ -4,6 +4,7 @@ import ru.fitgraph.database.weight.WeightPoint;
 import ru.fitgraph.database.users.User;
 import ru.fitgraph.database.users.UserController;
 import ru.fitgraph.database.weight.WeightPointController;
+import ru.fitgraph.engine.secure.AuthController;
 import ru.fitgraph.rest.elements.DateParameter;
 
 import javax.validation.constraints.NotNull;
@@ -29,7 +30,7 @@ public class WeightResource {
      *
      * Can be null only in permitted for all methods.
      */
-    @CookieParam(value = "JSESSIONID")
+    @CookieParam(value = AuthController.SESSION_COOKIE_NAME)
     protected  String sessionId;
 
     /**
