@@ -8,10 +8,17 @@ import ru.fitgraph.engine.vkapi.elements.VkAccessResponse;
 import ru.fitgraph.engine.vkapi.elements.VkUserInfo;
 import ru.fitgraph.engine.vkapi.exceptions.VkSideError;
 
+import javax.xml.bind.DatatypeConverter;
+import java.security.SecureRandom;
+import java.util.Random;
+
 /**
  * Class contain methods for work with user authentication.
  */
 public class AuthController {
+    public static final String SESSION_COOKIE_NAME = "fitgraphSessionSecret";
+
+    public static String VK_ID_COOKIE_NAME = "vkId";
 
     /**
      * Method check data provided by client for correctness and session validity.
@@ -49,5 +56,17 @@ public class AuthController {
         UserController.saveOrUpdate(user);
 
         return response.getUserId();
+    }
+
+    /**
+     * Method generate secure random number which should be used as session secret
+     * @return random generated string
+     */
+    public static String generateSessionSecret() {
+        Random randomGenerator = new SecureRandom();
+        byte[] sessionSecretAsBytes = new byte[16];
+        randomGenerator.nextBytes(sessionSecretAsBytes);
+
+        return DatatypeConverter.printHexBinary(sessionSecretAsBytes);
     }
 }

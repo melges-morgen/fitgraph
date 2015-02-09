@@ -32,7 +32,7 @@ public class ProfileResource {
      *
      * Can be null only in permitted for all methods.
      */
-    @CookieParam(value = "JSESSIONID")
+    @CookieParam(value = AuthController.SESSION_COOKIE_NAME)
     private String sessionId;
 
     /**
@@ -81,12 +81,19 @@ public class ProfileResource {
             @NotEmpty @QueryParam("code") String code,
             @Context HttpServletRequest request) throws MalformedURLException, VkSideError, URISyntaxException {
         String uri = request.getRequestURL().toString();
+        if(sessionId == null)
+            sessionId = AuthController.generateSessionSecret();
 
-        NewCookie vkIdCookie = new NewCookie("vkId", AuthController.auth(code, uri, sessionId).toString(), "/", null,
+        NewCookie vkIdCookie = new NewCookie(AuthController.VK_ID_COOKIE_NAME, AuthController.auth(code, uri, sessionId).toString(), "/", null,
                 null, 2629744, false); // Valid for a month
+        NewCookie sessionIdCookie = new NewCookie(AuthController.SESSION_COOKIE_NAME, sessionId, "/", null,
+                null, 2629744, false); // Valid for a month
+
         return Response.ok()
                 .cookie(vkIdCookie)
+                .cookie(sessionIdCookie)
                 .build();
+
     }
 
 
