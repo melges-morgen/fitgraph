@@ -95,6 +95,10 @@ fitGraphModule.controller('PointController', function ($scope, $filter,  pointsR
     $scope.endDate.setDate($scope.endDate.getDate() + 1);
 
     $scope.startDate = new Date();
+    $scope.startDate.setHours(0);
+    $scope.startDate.setMinutes(0);
+    $scope.startDate.setSeconds(0);
+    $scope.startDate.setMilliseconds(0);
     $scope.startDate.setDate($scope.endDate.getDate() - 7);
 
     $scope.points = pointsResource.query({startDate: $filter('date')($scope.startDate, $scope.dateFormat),
