@@ -192,6 +192,7 @@ fitGraphModule.controller('PointController', function ($scope, $filter,  pointsR
                 $scope.points.splice(function() { return ind; }, 1);
                 pointsReceived();
             } else {
+                var editedDate = editedPoint.date;
                 var request =  {
                     oldPoint: function() { return selectedPoint; }(),
                     newPoint: editedPoint
@@ -204,7 +205,7 @@ fitGraphModule.controller('PointController', function ($scope, $filter,  pointsR
                 request.newPoint.date = $filter('date')(request.newPoint.date, $scope.dateFormat);
                 pointsResource.change({}, request);
 
-                $scope.points[function() { return ind; }()].date = editedPoint.date;
+                $scope.points[function() { return ind; }()].date = editedDate;
                 pointsReceived();
             }
         }, function () {
@@ -237,10 +238,11 @@ fitGraphModule.controller('ModalPointEditController', function ($scope, $modalIn
     $scope.pointEditWeight = selectedPoint.weight;
 
     $scope.saveEdited = function () {
-        $scope.pointEditDate.setHours($scope.pointEditTime.getHours());
-        $scope.pointEditDate.setMinutes($scope.pointEditTime.getMinutes());
+        var selectedDate = $scope.pointEditDate;
+        selectedDate.setHours($scope.pointEditTime.getHours());
+        selectedDate.setMinutes($scope.pointEditTime.getMinutes());
         var pointToSave = {
-            date: $scope.pointEditDate,
+            date: selectedDate,
             weight: $scope.pointEditWeight
         };
 
