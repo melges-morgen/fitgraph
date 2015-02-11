@@ -1,4 +1,37 @@
 <div ng-controller="PointController" class="main-graph-layout">
+    <script type="text/ng-template" id="pointEditModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Редактирование точки</h3>
+        </div>
+        <div class="modal-body">
+            <form novalidate class="simple-form">
+                <div class="date-picker">
+                    <p class="input-group date-picker">
+                        <input type="text" class="form-control" datepicker-popup="{{datePickerFormat}}"
+                               ng-model="pointEditDate"
+                               is-open="editDatePopup" datepicker-options="dateOptions"
+                               ng-required="true" close-text="Close"/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="editDateOpen($event)"><i
+                                    class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+                <span style="">
+                    <timepicker ng-model="pointEditTime" show-meridian="false"></timepicker>
+                </span>
+                <label>Мой вес был:</label>
+                <input type="text" ng-model="pointEditWeight" class="form-control"
+                       style="max-width: 60px;margin-bottom: 6px;">
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="saveEdited()">OK</button>
+            <button class="btn btn-warning" ng-click="cancelEdit()">Отмена</button>
+            <button class="btn btn-danger" ng-click="deletePoint()">Удалить</button>
+        </div>
+    </script>
+
     <div class="graph-layout">
         <div>
             <div class="graph-controller">
@@ -37,10 +70,10 @@
                     <p class="input-group date-picker">
                         <input type="text" class="form-control" datepicker-popup="{{datePickerFormat}}"
                                ng-model="pointEditDate"
-                               is-open="startDatePopup" datepicker-options="dateOptions"
+                               is-open="editDatePopup" datepicker-options="dateOptions"
                                ng-required="true" close-text="Close"/>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="startDateOpen($event)"><i
+                            <button type="button" class="btn btn-default" ng-click="editDateOpen($event)"><i
                                     class="glyphicon glyphicon-calendar"></i></button>
                         </span>
                     </p>

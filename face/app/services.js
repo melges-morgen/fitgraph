@@ -20,7 +20,10 @@ fitgraphRemoteService.factory('profileResource', function ($resource) {
 });
 
 fitgraphRemoteService.factory('pointsResource', function ($resource) {
-    return $resource('/rest/weight/points', {}, {save: {method: 'PUT'}});
+    return $resource('/rest/weight/points', {}, {
+        save: {method: 'PUT'},
+        change: {method: 'POST'}
+    });
 });
 
 function convertDateStringsToDates(input) {

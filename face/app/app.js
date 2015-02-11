@@ -64,7 +64,7 @@ fitGraphModule.controller('AppController', function($scope, $interval, $location
     };
 });
 
-fitGraphModule.controller('PointController', function ($scope, $filter,  pointsResource) {
+fitGraphModule.controller('PointController', function ($scope, $filter,  pointsResource, $modal) {
     $scope.dateFormat = 'dd.MM.yyyy HH:mm:ss';
     $scope.graphDateFormat = 'dd.MM HH:mm';
 
@@ -81,7 +81,7 @@ fitGraphModule.controller('PointController', function ($scope, $filter,  pointsR
         labels: false,
         mouseover: function() {},
         mouseout: function() {},
-        click: function(d) {console.log(d)},
+        click: graphOnPointClick,
         legend: {
             display: true,
             //could be 'left, right'
@@ -119,6 +119,13 @@ fitGraphModule.controller('PointController', function ($scope, $filter,  pointsR
         $scope.endDatePopup = true;
     };
 
+    $scope.editDateOpen = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.editDatePopup = true;
+    };
+
     $scope.dateOptions = {
         formatYear: 'yy',
         startingDay: 1
@@ -129,25 +136,80 @@ fitGraphModule.controller('PointController', function ($scope, $filter,  pointsR
     $scope.pointEditWeight = 60;
 
     $scope.savePoint = function () {
-        var pointToSave = {date: $filter('date')($scope.pointEditDate.setTime($scope.pointEditTime.getTime()),
-            $scope.dateFormat), weight: $scope.pointEditWeight};
+        $scope.pointEditDate.setHours($scope.pointEditTime.getHours());
+        $scope.pointEditDate.setMinutes($scope.pointEditTime.getMinutes());
+        var pointToSave = {
+            date: $filter('date')($scope.pointEditDate, $scope.dateFormat),
+            weight: $scope.pointEditWeight
+        };
         pointsResource.save(pointToSave);
+
+        var pointsToShow = {date: $scope.pointEditDate,
+            weight: $scope.pointEditWeight};
+        $scope.points.push(pointsToShow);
+        pointsReceived();
     };
 
     function pointsReceived(data, status) {
         $scope.chartData.data = [];
 
         $scope.points.sort(function(a, b) {
-            return (new Date(b.date) - new Date(a.date)) * -1;
+            return (b.date - a.date) * -1;
         });
 
         for(var ind = 0; ind < $scope.points.length; ind++) {
             $scope.chartData.data.push({
                 x: $filter('date')(Date.parse($scope.points[ind].date), $scope.graphDateFormat),
-                y: [$scope.points[ind].weight]
+                y: [$scope.points[ind].weight],
+                originalDate: $scope.points[ind].date
             });
         }
 
+    }
+
+    function graphOnPointClick(point) {
+        var selectedPoint;
+        for(var ind = 0; ind < $scope.points.length; ind++) {
+            if(point.x === $filter('date')(Date.parse($scope.points[ind].date), $scope.graphDateFormat)) {
+                selectedPoint = $scope.points[ind];
+                break;
+            }
+        }
+
+        var modalInstance = $modal.open({
+            templateUrl: 'pointEditModal.html',
+            controller: 'ModalPointEditController',
+            resolve: {
+                selectedPoint: function () { return selectedPoint; }
+            }
+        });
+
+        modalInstance.result.then(function (editedPoint) {
+            if(editedPoint == null) {
+                var pointToDelete = function() { return selectedPoint; }();
+                pointToDelete.date = $filter('date')(pointToDelete.date, $scope.dateFormat);
+                pointsResource.delete({date: pointToDelete.date});
+                $scope.points.splice(function() { return ind; }, 1);
+                pointsReceived();
+            } else {
+                var request =  {
+                    oldPoint: function() { return selectedPoint; }(),
+                    newPoint: editedPoint
+                };
+
+                request.oldPoint = {
+                    date: $filter('date')(request.oldPoint.date, $scope.dateFormat),
+                    weight: request.oldPoint.weight
+                };
+                request.newPoint.date = $filter('date')(request.newPoint.date, $scope.dateFormat);
+                pointsResource.change({}, request);
+
+                $scope.points[function() { return ind; }()].date = editedPoint.date;
+                pointsReceived();
+            }
+        }, function () {
+            console.log('Modal dismissed at: ' + new Date());
+        });
     }
 
     function periodChanged(newValue, oldValue) {
@@ -156,6 +218,49 @@ fitGraphModule.controller('PointController', function ($scope, $filter,  pointsR
             endDate: $filter('date')($scope.endDate, $scope.dateFormat)
         }, pointsReceived);
     }
+});
+
+fitGraphModule.controller('ModalPointEditController', function ($scope, $modalInstance,  pointsResource, selectedPoint) {
+    $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
+    };
+
+    $scope.datePickerFormat = 'dd.MM.yy';
+
+    $scope.dateFormat = 'dd.MM.yyyy HH:mm:ss';
+
+    $scope.pointEditDate = selectedPoint.date;
+
+    $scope.pointEditTime = selectedPoint.date;
+
+    $scope.pointEditWeight = selectedPoint.weight;
+
+    $scope.saveEdited = function () {
+        $scope.pointEditDate.setHours($scope.pointEditTime.getHours());
+        $scope.pointEditDate.setMinutes($scope.pointEditTime.getMinutes());
+        var pointToSave = {
+            date: $scope.pointEditDate,
+            weight: $scope.pointEditWeight
+        };
+
+        $modalInstance.close(pointToSave);
+    };
+
+    $scope.cancelEdit = function () {
+        $modalInstance.dismiss('cancel');
+    };
+
+    $scope.deletePoint = function () {
+        $modalInstance.close(null);
+    };
+
+    $scope.editDateOpen = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.editDatePopup = true;
+    };
 });
 
 fitGraphModule.run(function($rootScope, $location, $window) {
