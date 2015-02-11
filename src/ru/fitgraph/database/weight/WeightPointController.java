@@ -2,10 +2,7 @@ package ru.fitgraph.database.weight;
 
 import ru.fitgraph.database.users.User;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -54,6 +51,32 @@ public class WeightPointController {
             query.setParameter("startDate", startDate);
             query.setParameter("endDate", endDate);
             return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Find users weight point at specified date.
+     * @param vkId users vk id, which should own point.
+     * @param date date of point.
+     * @return finded weight point or null;
+     */
+    public static WeightPoint getPointByParameters(Long vkId, Date date) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<WeightPoint> query = em.createNamedQuery("WeightPoint.getByVkUserAndDate", WeightPoint.class);
+            query.setParameter("vkId", vkId);
+            query.setParameter("date", date);
+
+            List<WeightPoint> resultList = query.getResultList();
+            if (resultList.size() == 1)
+                return resultList.get(0);
+            if (resultList.size() == 0)
+                return null;
+
+            throw new NonUniqueResultException("We are try to get user by vkId and session, but get more than 1 result. " +
+                    "This can occur when the database is incorrectly configured");
         } finally {
             em.close();
         }

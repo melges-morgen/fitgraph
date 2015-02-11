@@ -27,11 +27,15 @@ import java.util.Date;
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "date"}, name = "datePerUser"))
 @NamedQueries({
         @NamedQuery(name = "WeightPoint.getUserPointBetween", query = "select point from WeightPoint point " +
-            "where point.owner = :owner and point.date > :startDate and point.date < :endDate"),
+            "where point.owner = :owner and point.date > :startDate and point.date < :endDate " +
+                "and point.deleted = false"),
         @NamedQuery(name = "WeightPoint.getVkUserPointBetween", query = "select point " +
                 "from WeightPoint point " +
                 "where point.owner = (select user from User user where user.vkUserId = :ownerVkId) " +
-                "and point.date > :startDate and point.date < :endDate")
+                "and point.date > :startDate and point.date < :endDate and point.deleted = false"),
+        @NamedQuery(name = "WeightPoint.getByVkUserAndDate", query = "select point from WeightPoint point where " +
+                "point.date = :date and point.owner = (select user from User user where user.vkUserId = :vkId) " +
+                "and point.deleted = false")
 })
 public class WeightPoint {
     /**
@@ -69,6 +73,11 @@ public class WeightPoint {
     User owner;
 
     /**
+     * Is point deleted? We don't really delete rows from database in performance aims.
+     */
+    private boolean deleted = false;
+
+    /**
      * Create unfilled point without owner
      */
     public WeightPoint() {
@@ -103,6 +112,14 @@ public class WeightPoint {
         this.date = date;
     }
 
+    /**
+     * Make points exactly (by date and weight) as specified.
+     * @param inheritFromPoint point which should be inherited.
+     */
+    public void inheritParameters(WeightPoint inheritFromPoint) {
+        this.weight = inheritFromPoint.weight;
+        this.date = inheritFromPoint.date;
+    }
 
     public Long getId() {
         return id;
@@ -122,5 +139,13 @@ public class WeightPoint {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
