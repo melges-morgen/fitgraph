@@ -14,7 +14,7 @@ public class WeightPointController {
      * Entity manager factory associated with our data source.
      */
     private static EntityManagerFactory emf =
-            Persistence.createEntityManagerFactory("FitGraphDataSource");
+            Persistence.createEntityManagerFactory("LocalDB");
 
     /**
      * Find weight points registered in specified period and owned by specified user.

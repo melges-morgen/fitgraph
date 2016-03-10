@@ -11,7 +11,7 @@ public class UserController {
      * Entity manager factory associated with our data source
      */
     private static EntityManagerFactory emf =
-            Persistence.createEntityManagerFactory("FitGraphDataSource");
+            Persistence.createEntityManagerFactory("LocalDB");
 
     /**
      * Find user with specified vk id and session id. Useful for auth methods.
