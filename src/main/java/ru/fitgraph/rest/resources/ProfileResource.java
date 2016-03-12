@@ -1,6 +1,7 @@
 package ru.fitgraph.rest.resources;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.stereotype.Component;
 import ru.fitgraph.database.users.User;
 import ru.fitgraph.database.users.UserController;
 import ru.fitgraph.engine.secure.AuthController;
@@ -24,6 +25,7 @@ import java.net.URISyntaxException;
  *
  * @author Morgen Matvey
  */
+@Component
 @Path("/profile")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class ProfileResource {

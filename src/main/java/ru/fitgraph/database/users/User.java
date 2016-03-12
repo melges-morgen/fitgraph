@@ -29,8 +29,7 @@ import java.util.*;
         @NamedQuery(name = "User.getUserByVkIdAndSessionSecret", query = "select user " +
                 "from User user, UserSession sessions where " +
                 "user.vkUserId = :vkId and sessions.sessionSecret = :secret " +
-                "and sessions.expiresIn > CURRENT_TIMESTAMP"),
-        @NamedQuery(name = "User.getUserByVkId", query = "select user from User user where user.vkUserId = :vkId")
+                "and sessions.expiresIn > CURRENT_TIMESTAMP")
 })
 public class User {
     /**
