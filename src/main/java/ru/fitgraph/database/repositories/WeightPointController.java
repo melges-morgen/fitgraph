@@ -1,6 +1,7 @@
-package ru.fitgraph.database.weight;
+package ru.fitgraph.database.repositories;
 
-import ru.fitgraph.database.users.User;
+import ru.fitgraph.database.entities.User;
+import ru.fitgraph.database.entities.WeightPoint;
 
 import javax.persistence.*;
 import java.util.Date;

@@ -1,10 +1,9 @@
-package ru.fitgraph.database.weight;
+package ru.fitgraph.database.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import ru.fitgraph.database.marshals.WeightDateJsonDeserializer;
 import ru.fitgraph.database.marshals.WeightDateJsonSerializer;
-import ru.fitgraph.database.users.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

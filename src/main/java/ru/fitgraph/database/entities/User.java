@@ -1,7 +1,6 @@
-package ru.fitgraph.database.users;
+package ru.fitgraph.database.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import ru.fitgraph.database.weight.WeightPoint;
 import ru.fitgraph.database.marshals.BirthDateJsonSerializer;
 
 import javax.persistence.*;
@@ -96,7 +95,7 @@ public class User {
 
     /**
      * Virtual field, list which contain all success auth sessions opened by user.
-     * Field is virtual, link to user is made by column in {@link ru.fitgraph.database.users.UserSession} class.
+     * Field is virtual, link to user is made by column in {@link UserSession} class.
      */
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @MapKeyColumn(name = "session_secret", insertable = false, updatable = false)

@@ -1,7 +1,7 @@
 package ru.fitgraph.engine.secure;
 
-import ru.fitgraph.database.users.User;
-import ru.fitgraph.database.users.UserController;
+import ru.fitgraph.database.entities.User;
+import ru.fitgraph.database.repositories.UserController;
 import ru.fitgraph.engine.vkapi.VkAuth;
 import ru.fitgraph.engine.vkapi.VkUsers;
 import ru.fitgraph.engine.vkapi.elements.VkAccessResponse;

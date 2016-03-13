@@ -1,10 +1,10 @@
 package ru.fitgraph.rest.resources;
 
 import org.springframework.stereotype.Component;
-import ru.fitgraph.database.weight.WeightPoint;
-import ru.fitgraph.database.users.User;
-import ru.fitgraph.database.users.UserController;
-import ru.fitgraph.database.weight.WeightPointController;
+import ru.fitgraph.database.entities.WeightPoint;
+import ru.fitgraph.database.entities.User;
+import ru.fitgraph.database.repositories.UserController;
+import ru.fitgraph.database.repositories.WeightPointController;
 import ru.fitgraph.engine.secure.AuthController;
 import ru.fitgraph.rest.elements.ChangeWeightPointRequest;
 import ru.fitgraph.rest.elements.DateParameter;

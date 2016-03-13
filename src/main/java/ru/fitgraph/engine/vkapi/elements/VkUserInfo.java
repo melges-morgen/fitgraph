@@ -1,7 +1,7 @@
 package ru.fitgraph.engine.vkapi.elements;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import ru.fitgraph.database.users.User;
+import ru.fitgraph.database.entities.User;
 import ru.fitgraph.engine.vkapi.marshals.VkDateDeserializer;
 
 import javax.validation.constraints.NotNull;

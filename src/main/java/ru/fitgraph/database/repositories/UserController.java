@@ -1,4 +1,7 @@
-package ru.fitgraph.database.users;
+package ru.fitgraph.database.repositories;
+
+import ru.fitgraph.database.entities.User;
+import ru.fitgraph.database.entities.UserSession;
 
 import javax.persistence.*;
 import java.util.List;

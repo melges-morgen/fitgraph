@@ -2,8 +2,8 @@ package ru.fitgraph.rest.resources;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Component;
-import ru.fitgraph.database.users.User;
-import ru.fitgraph.database.users.UserController;
+import ru.fitgraph.database.entities.User;
+import ru.fitgraph.database.repositories.UserController;
 import ru.fitgraph.engine.secure.AuthController;
 import ru.fitgraph.engine.vkapi.VkAuth;
 import ru.fitgraph.engine.vkapi.elements.VkAuthUri;
@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 /**

@@ -1,6 +1,6 @@
 package ru.fitgraph.rest.elements;
 
-import ru.fitgraph.database.weight.WeightPoint;
+import ru.fitgraph.database.entities.WeightPoint;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
