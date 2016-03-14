@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by melges on 19.01.15.
  */
-public class WeightPointController {
+public class WeightPointRepository {
     /**
      * Entity manager factory associated with our data source.
      */

@@ -3,8 +3,6 @@ package ru.fitgraph.rest.resources;
 import org.springframework.stereotype.Component;
 import ru.fitgraph.database.entities.WeightPoint;
 import ru.fitgraph.database.entities.User;
-import ru.fitgraph.database.repositories.UserController;
-import ru.fitgraph.database.repositories.WeightPointController;
 import ru.fitgraph.engine.secure.AuthController;
 import ru.fitgraph.rest.elements.ChangeWeightPointRequest;
 import ru.fitgraph.rest.elements.DateParameter;
@@ -51,7 +49,7 @@ public class WeightResource {
      */
     @GET
     public List<WeightPoint> getAllPoints() {
-        User user = UserController.getUserByVkAndSession(vkId, sessionId);
+        User user = ru.fitgraph.database.repositories.UserRepository.getUserByVkAndSession(vkId, sessionId);
         return new ArrayList<WeightPoint>(user.getWeightPoints());
     }
 
@@ -65,7 +63,7 @@ public class WeightResource {
     @Path("/points")
     public List<WeightPoint> getPoints(@NotNull @QueryParam("startDate") DateParameter startDate,
                                        @NotNull @QueryParam("endDate") DateParameter endDate) {
-        return WeightPointController.getVkUserWeightPointsBetween(vkId, startDate.getDate(), endDate.getDate());
+        return ru.fitgraph.database.repositories.WeightPointRepository.getVkUserWeightPointsBetween(vkId, startDate.getDate(), endDate.getDate());
     }
 
     /**
@@ -78,9 +76,9 @@ public class WeightResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public void addPointUrlEncoded(@NotNull @FormParam("date") DateParameter date,
                                    @NotNull @FormParam("weight") Double weight) {
-        User user = UserController.getUserByVkAndSession(vkId, sessionId);
+        User user = ru.fitgraph.database.repositories.UserRepository.getUserByVkAndSession(vkId, sessionId);
         user.addWeightPoint(date.getDate(), weight);
-        UserController.saveOrUpdate(user);
+        ru.fitgraph.database.repositories.UserRepository.saveOrUpdate(user);
     }
 
     /**
@@ -90,20 +88,20 @@ public class WeightResource {
     @PUT
     @Path("/points")
     public void addPoint(WeightPoint point) {
-        User user = UserController.getUserByVkAndSession(vkId, sessionId);
+        User user = ru.fitgraph.database.repositories.UserRepository.getUserByVkAndSession(vkId, sessionId);
         user.addWeightPoint(point);
-        UserController.saveOrUpdate(user);
+        ru.fitgraph.database.repositories.UserRepository.saveOrUpdate(user);
     }
 
     @POST
     @Path("/points")
     public void changePoint(@NotNull ChangeWeightPointRequest request) {
-        WeightPoint pointToChange = WeightPointController.getPointByParameters(vkId, request.getOldPoint().getDate());
+        WeightPoint pointToChange = ru.fitgraph.database.repositories.WeightPointRepository.getPointByParameters(vkId, request.getOldPoint().getDate());
         if(pointToChange == null)
             throw new NotFoundException("Specified point not founded");
 
         pointToChange.inheritParameters(request.getNewPoint());
-        WeightPointController.saveOrUpdate(pointToChange);
+        ru.fitgraph.database.repositories.WeightPointRepository.saveOrUpdate(pointToChange);
     }
 
     /**
@@ -113,12 +111,12 @@ public class WeightResource {
     @DELETE
     @Path("/points")
     public void deletePoint(@NotNull @QueryParam("date") DateParameter pointDateParam) {
-        WeightPoint pointToDelete = WeightPointController.getPointByParameters(vkId, pointDateParam.getDate());
+        WeightPoint pointToDelete = ru.fitgraph.database.repositories.WeightPointRepository.getPointByParameters(vkId, pointDateParam.getDate());
         if(pointToDelete == null)
             throw new NotFoundException(String.format("Weight point at %s for %d does not exist.",
                     pointDateParam.getDate().toString(), vkId));
 
         pointToDelete.setDeleted(true);
-        WeightPointController.saveOrUpdate(pointToDelete);
+        ru.fitgraph.database.repositories.WeightPointRepository.saveOrUpdate(pointToDelete);
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Class for work with user objects.
  */
-public class UserController {
+public class UserRepository {
     /**
      * Entity manager factory associated with our data source
      */

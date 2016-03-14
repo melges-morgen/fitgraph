@@ -3,7 +3,6 @@ package ru.fitgraph.rest.resources;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Component;
 import ru.fitgraph.database.entities.User;
-import ru.fitgraph.database.repositories.UserController;
 import ru.fitgraph.engine.secure.AuthController;
 import ru.fitgraph.engine.vkapi.VkAuth;
 import ru.fitgraph.engine.vkapi.elements.VkAuthUri;
@@ -104,6 +103,6 @@ public class ProfileResource {
      */
     @GET
     public User getProfile() {
-        return UserController.getUserByVkAndSession(vkId, sessionId);
+        return ru.fitgraph.database.repositories.UserRepository.getUserByVkAndSession(vkId, sessionId);
     }
 }
