@@ -1,5 +1,6 @@
 package ru.fitgraph.database.repositories;
 
+import org.springframework.stereotype.Repository;
 import ru.fitgraph.database.entities.User;
 import ru.fitgraph.database.entities.WeightPoint;
 
@@ -10,7 +11,9 @@ import java.util.List;
 /**
  * Created by melges on 19.01.15.
  */
-public class WeightPointController {
+
+@Repository
+public class WeightPointRepository {
     /**
      * Entity manager factory associated with our data source.
      */

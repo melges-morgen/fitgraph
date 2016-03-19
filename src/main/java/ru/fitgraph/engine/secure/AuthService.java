@@ -1,7 +1,9 @@
 package ru.fitgraph.engine.secure;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.fitgraph.database.entities.User;
-import ru.fitgraph.database.repositories.UserController;
+import ru.fitgraph.database.repositories.UserRepository;
 import ru.fitgraph.engine.vkapi.VkAuth;
 import ru.fitgraph.engine.vkapi.VkUsers;
 import ru.fitgraph.engine.vkapi.elements.VkAccessResponse;
@@ -15,7 +17,9 @@ import java.util.Random;
 /**
  * Class contain methods for work with user authentication.
  */
-public class AuthController {
+
+@Service
+public class AuthService {
     public static final String SESSION_COOKIE_NAME = "fitgraphSessionSecret";
 
     public static String VK_ID_COOKIE_NAME = "vkId";
@@ -27,7 +31,7 @@ public class AuthController {
      * @return true if clint give correct data, or false if client is liar or his session expired.
      */
     public static boolean isSessionCorrect(Long vkId, String sessionSecret) {
-        return UserController.getUserByVkAndSession(vkId, sessionSecret) != null;
+        return UserRepository.getUserByVkAndSession(vkId, sessionSecret) != null;
     }
 
     /**
@@ -42,7 +46,7 @@ public class AuthController {
      */
     public static Long auth(String code, String redirectUrl, String sessionSecret) throws VkSideError {
         VkAccessResponse response = VkAuth.auth(code, redirectUrl);
-        User user = UserController.getUserByVkId(response.getUserId());
+        User user = UserRepository.getUserByVkId(response.getUserId());
         if(user == null) {
             VkUserInfo vkUserInfo = VkUsers.get(response.getUserId(), response.getAccessToken());
             user = new User(vkUserInfo.getFullName(), response.getEmail(), vkUserInfo.getSex(),
@@ -53,7 +57,7 @@ public class AuthController {
             user.addSession(sessionSecret, response.getAccessToken(), response.getExpiresIn());
         }
 
-        UserController.saveOrUpdate(user);
+        UserRepository.saveOrUpdate(user);
 
         return response.getUserId();
     }

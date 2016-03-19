@@ -1,20 +1,12 @@
 package ru.fitgraph.rest.resources;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.stereotype.Component;
 import ru.fitgraph.database.entities.User;
-import ru.fitgraph.database.repositories.UserController;
-import ru.fitgraph.engine.secure.AuthController;
-import ru.fitgraph.engine.vkapi.VkAuth;
-import ru.fitgraph.engine.vkapi.elements.VkAuthUri;
-import ru.fitgraph.engine.vkapi.exceptions.VkSideError;
+import ru.fitgraph.database.repositories.UserRepository;
+import ru.fitgraph.engine.secure.AuthService;
 
-import javax.annotation.security.PermitAll;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
 /**
  * Resource which is used for auth and work with profile.
@@ -33,7 +25,7 @@ public class ProfileResource {
      *
      * Can be null only in permitted for all methods.
      */
-    @CookieParam(value = AuthController.SESSION_COOKIE_NAME)
+    @CookieParam(value = AuthService.SESSION_COOKIE_NAME)
     private String sessionId;
 
     /**
@@ -45,65 +37,37 @@ public class ProfileResource {
     private Long vkId;
 
     /**
-     * Return uri referring to which the client will receive the code necessary
-     * to authenticate and from which they will be redirected back to our
-     * resource for authentication. Method wouldn't redirect
-     *
-     * Method allowed for all.
-     * @param uriInfo information about resource, uri injected by context.
-     * @return redirect uri as string.
-     */
-    @GET
-    @PermitAll
-    @Path("/getVkRequestUri")
-    public VkAuthUri getVkRequestUri(@Context UriInfo uriInfo) {
-        return VkAuth.getClientAuthUri(uriInfo.getBaseUriBuilder()
-                .path(ProfileResource.class) // Add class path
-                .path(ProfileResource.class, "auth").build());
-    }
-
-    /**
-     * Auth user by code and set the client cookie. For comparability with browser application method return html page
-     * with javascript which should close the window.
-     *
-     * Yo should call {@link #getVkRequestUri(javax.ws.rs.core.UriInfo)}
-     * for get the url which client must call, to get the code.
-     * @param code code that vk returned to the client.
-     * @param request information about request, injected by context.
-     * @return response with new cookie, or error object with description.
-     * @throws MalformedURLException
-     * @throws VkSideError
-     * @throws URISyntaxException
-     */
-    @GET
-    @PermitAll
-    @Path("/auth")
-    public Response auth(
-            @NotEmpty @QueryParam("code") String code,
-            @Context HttpServletRequest request) throws MalformedURLException, VkSideError, URISyntaxException {
-        String uri = request.getRequestURL().toString();
-        if(sessionId == null)
-            sessionId = AuthController.generateSessionSecret();
-
-        NewCookie vkIdCookie = new NewCookie(AuthController.VK_ID_COOKIE_NAME, AuthController.auth(code, uri, sessionId).toString(), "/", null,
-                null, 2629744, false); // Valid for a month
-        NewCookie sessionIdCookie = new NewCookie(AuthController.SESSION_COOKIE_NAME, sessionId, "/", null,
-                null, 2629744, false); // Valid for a month
-
-        return Response.ok()
-                .cookie(vkIdCookie)
-                .cookie(sessionIdCookie)
-                .build();
-
-    }
-
-
-    /**
      * Return user profile object. Only for authorized users.
      * @return profile object.
      */
     @GET
-    public User getProfile() {
-        return UserController.getUserByVkAndSession(vkId, sessionId);
+    @Path("/me")
+    public User getMyProfile() {
+        return UserRepository.getUserByVkAndSession(vkId, sessionId);
+    }
+
+    /** Finds a weight points resource for working with weight points of given user
+     *
+     * @param id id of user to get points for
+     * @return weightResource
+     */
+    @Path("/{id}/weight")
+    public WeightResource getWeightResource(@PathParam("id") long id) {
+        return new WeightResource(id);
+    }
+
+    /**
+     * Finds a schedule resource for working with drugs, weight points and so on
+     * @param id id of user to finds schedule for
+     * @return scheduleResource
+     */
+    @Path("/{id}/schelude")
+    public ScheduleResource getScheduleResource(@PathParam("id") long id) {
+        return new ScheduleResource(id);
+    }
+
+    @Path("/auth")
+    public AuthResource getAuthResource(@Context UriInfo uriInfo, String sessionId) {
+        return new AuthResource(uriInfo, sessionId);
     }
 }

@@ -56,7 +56,7 @@ public class AuthFilter implements ContainerRequestFilter {
             throw new ForbiddenException("Forbidden. Denied for all.");
 
         Map<String, Cookie> cookieMap = requestContext.getCookies();
-        Cookie vkIdCookie = cookieMap.get(AuthController.VK_ID_COOKIE_NAME);
+        Cookie vkIdCookie = cookieMap.get(AuthService.VK_ID_COOKIE_NAME);
         if(vkIdCookie == null)
             throw new NotAuthenticatedException("No vkId in cookie.");
         Long vkId;
@@ -67,7 +67,7 @@ public class AuthFilter implements ContainerRequestFilter {
             throw new NotAuthenticatedException("Invalid vkId in cookie");
         }
 
-        Cookie sessionCookie = cookieMap.get(AuthController.SESSION_COOKIE_NAME);
+        Cookie sessionCookie = cookieMap.get(AuthService.SESSION_COOKIE_NAME);
         if(sessionCookie == null)
             throw new NotAuthenticatedException("No session in cookie.");
         String sessionSecret = sessionCookie.getValue();
@@ -81,7 +81,7 @@ public class AuthFilter implements ContainerRequestFilter {
             return;
         }
 
-        if(!AuthController.isSessionCorrect(vkId, sessionSecret))
+        if(!AuthService.isSessionCorrect(vkId, sessionSecret))
             throw new NotAuthenticatedException("Session incorrect or expired");
 
     }
