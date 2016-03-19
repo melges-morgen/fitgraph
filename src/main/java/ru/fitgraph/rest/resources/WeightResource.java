@@ -25,6 +25,7 @@ import java.util.List;
  * @author Morgen Matvey
  */
 @Component
+@Path("/weight")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class WeightResource {
