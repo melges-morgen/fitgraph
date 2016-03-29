@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * Class for work with user objects.
  */
-
 @Repository
 public class UserRepository {
     /**

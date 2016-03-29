@@ -46,28 +46,32 @@ public class ProfileResource {
         return UserRepository.getUserByVkAndSession(vkId, sessionId);
     }
 
-    /** Finds a weight points resource for working with weight points of given user
+    /** Delegates work with weight to weight resource using DI
      *
-     * @param id id of user to get points for
-     * @return weightResource
+     * @return WeightResource class
      */
     @Path("/{id}/weight")
-    public WeightResource getWeightResource(@PathParam("id") long id) {
-        return new WeightResource(id);
+    public Class<ScheduleResource> getWeightResource() {
+        return ScheduleResource.class;
     }
 
     /**
-     * Finds a schedule resource for working with drugs, weight points and so on
-     * @param id id of user to finds schedule for
-     * @return scheduleResource
+     * Delegates work with drugs, weight points and so on to schedule resource using DI
+     *
+     * @return ScheduleResource class
      */
     @Path("/{id}/schelude")
-    public ScheduleResource getScheduleResource(@PathParam("id") long id) {
-        return new ScheduleResource(id);
+    public Class<ScheduleResource> getScheduleResource() {
+        return ScheduleResource.class;
     }
 
+    /**
+     * Delegates authorization to special resource using DI
+     *
+     * @return AuthResource class
+     */
     @Path("/auth")
-    public AuthResource getAuthResource(@Context UriInfo uriInfo, String sessionId) {
-        return new AuthResource(uriInfo, sessionId);
+    public Class<AuthResource> getAuthResource() {
+        return AuthResource.class;
     }
 }

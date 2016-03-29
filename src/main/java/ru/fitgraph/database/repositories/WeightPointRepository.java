@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * Created by melges on 19.01.15.
  */
-
 @Repository
 public class WeightPointRepository {
     /**

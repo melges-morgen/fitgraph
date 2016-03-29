@@ -17,7 +17,6 @@ import java.util.Random;
 /**
  * Class contain methods for work with user authentication.
  */
-
 @Service
 public class AuthService {
     public static final String SESSION_COOKIE_NAME = "fitgraphSessionSecret";

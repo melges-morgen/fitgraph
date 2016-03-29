@@ -45,10 +45,6 @@ public class WeightResource {
     @CookieParam(value = "vkId")
     protected Long vkId;
 
-    public WeightResource(long id) {
-
-    }
-
     /**
      * Return all weight points of user. User detected by context vkId and session.
      * @return all weight points of the user.
