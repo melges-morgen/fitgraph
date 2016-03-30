@@ -1,5 +1,6 @@
 package ru.fitgraph.database.repositories;
 
+import org.springframework.stereotype.Repository;
 import ru.fitgraph.database.entities.User;
 import ru.fitgraph.database.entities.UserSession;
 
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Class for work with user objects.
  */
+@Repository
 public class UserRepository {
     /**
      * Entity manager factory associated with our data source
